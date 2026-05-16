@@ -1,5 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
+from backend.accounts.views import sign_in, sign_up
+
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name="frontend/index.html")),
@@ -16,6 +18,6 @@ urlpatterns = [
     path('profile/', TemplateView.as_view(template_name="frontend/profile.html")),
     path('progress-payment/', TemplateView.as_view(template_name="frontend/progressPayment.html")),
     path('sale/', TemplateView.as_view(template_name="frontend/sale.html")),
-    path('sign-in/', TemplateView.as_view(template_name="frontend/signIn.html")),
-    path('sign-up/', TemplateView.as_view(template_name="frontend/signUp.html")),
+    path('sign-in/', sign_in (template_name="frontend/signIn.html")),
+    path('sign-up/', sign_up (template_name="frontend/signUp.html")),
 ]
