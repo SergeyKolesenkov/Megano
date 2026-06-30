@@ -1,5 +1,0 @@
-setup.py
-megano.egg-info/PKG-INFO
-megano.egg-info/SOURCES.txt
-megano.egg-info/dependency_links.txt
-megano.egg-info/top_level.txt
