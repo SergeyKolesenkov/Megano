@@ -1,6 +1,9 @@
 from django.urls import path
 from django.views.generic import TemplateView
-from backend.accounts.views import sign_in, sign_up
+
+from account.views import sign_in, sign_up
+
+# from backend.accounts.views import sign_in, sign_up
 
 
 urlpatterns = [
@@ -11,13 +14,17 @@ urlpatterns = [
     path('catalog/<int:id>/', TemplateView.as_view(template_name="frontend/catalog.html")),
     path('history-order/', TemplateView.as_view(template_name="frontend/historyorder.html")),
     path('order-detail/<int:id>/', TemplateView.as_view(template_name="frontend/oneorder.html")),
-    path('orders/<int:id>/', TemplateView.as_view(template_name="frontend/order.html")),
+    path('order/<int:id>/', TemplateView.as_view(template_name="frontend/order.html")),
     path('payment/<int:id>/', TemplateView.as_view(template_name="frontend/payment.html")),
     path('payment-someone/', TemplateView.as_view(template_name="frontend/paymentsomeone.html")),
     path('product/<int:id>/', TemplateView.as_view(template_name="frontend/product.html")),
     path('profile/', TemplateView.as_view(template_name="frontend/profile.html")),
     path('progress-payment/', TemplateView.as_view(template_name="frontend/progressPayment.html")),
-    path('sale/', TemplateView.as_view(template_name="frontend/sale.html")),
-    path('sign-in/', sign_in (template_name="frontend/signIn.html")),
-    path('sign-up/', sign_up (template_name="frontend/signUp.html")),
+    path('sales/', TemplateView.as_view(template_name="frontend/sales.html")),
+    path('sale/', TemplateView.as_view(template_name='frontend/profile.html'))
+    # path('sign-in/', TemplateView.as_view(template_name="frontend/signIn.html"), name='login_page'),
+    # path('sign-up/', TemplateView.as_view(template_name="frontend/signUp.html"), name='register_page'),
+
+    # path('sign-in/', sign_in, name='sign_in'),
+    # path('sign-up/', sign_up, name='sign_up'),
 ]

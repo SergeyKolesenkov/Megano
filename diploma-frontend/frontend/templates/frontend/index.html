@@ -15,7 +15,7 @@
               <div class="BannersHomeBlock-block">
                 <strong class="BannersHomeBlock-title">${ banner.title }$
                 </strong>
-                <div class="BannersHomeBlock-content">from &#32;<span class="BannersHomeBlock-price">$ ${ banner.price }$</span>
+                <div class="BannersHomeBlock-content">от &#32;<span class="BannersHomeBlock-price">${ banner.price }$ руб</span>
                 </div>
               </div>
               <div class="BannersHomeBlock-block" v-if="banner.images.length > 0">
@@ -165,6 +165,7 @@
       </div>
     </div>
   </div>
+
 {% endblock %}
 
 {% block mixins %}

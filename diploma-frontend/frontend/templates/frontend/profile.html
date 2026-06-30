@@ -43,7 +43,7 @@
           <div class="Profile">
               <div class="row">
                   <div class="row-block">
-                    <form action="" @submit.prevent="changeProfile">
+                    <form action='/api/profile/avatar/' @submit.prevent="changeProfile">
                     <div class="form-group">
                       <label class="form-label" for="avatar">Аватар
                       </label>
@@ -52,7 +52,7 @@
                           <input class="Profile-file form-input" @change="setAvatar" @click="$event.target.value = null" type="file" id="avatar" name="avatar" type="file" data-validate="onlyImgAvatar"/>
                       </div>
                       <div v-else class="Profile-img" @click="clearAvatar">
-                        <img :src="avatar.src" :alt="avatar.alt"/>
+                        <img :src="avatar" :alt="avatar.alt"/>
                       </div>
                     </div>
                     <div class="form-group">
@@ -76,7 +76,7 @@
                   </div>
 
                   <div class="row-block">
-                    <form action="" @submit.prevent="changePassword">
+                    <form action="/api/profile/" @submit.prevent="changePassword">
                     <div class="form-group">
                       <label class="form-label" for="passwordCurrent">Текущий пароль</label>
                       <input class="form-input" id="passwordCurrent" name="passwordCurrent" type="password" placeholder="Введите текущий пароль" v-model="passwordCurrent"/>

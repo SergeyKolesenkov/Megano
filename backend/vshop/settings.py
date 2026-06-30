@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.conf.global_settings import APPEND_SLASH
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-r)iiize5hi7+lkgxkxo+66sjvq+e4(53_z*@=@^5j27@&&c8$$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -38,11 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'frontend',
-    'products',
-    'orders',
-    'accounts.apps.AccountsConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'account',
+    'apps.basket',
+    'apps.catalog',
+    'apps.categories',
+    'apps.reviews',
+    'apps.specifications',
+    'apps.tags',
+    'apps.banner',
+    'apps.sales',
+    'apps.orders',
+    'apps.payments'
 ]
 
 MIDDLEWARE = [
@@ -80,12 +90,25 @@ WSGI_APPLICATION = 'vshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get('DB_HOST'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'megano_db'),
+            'USER': os.environ.get('DB_USER', 'megano_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'megano_secure_password'),
+            'HOST': os.environ.get('DB_HOST', 'db'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
     }
-}
+else:
+    # Оставляем sqlite как запасной вариант для запуска без Docker (через runserver)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -112,20 +135,39 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+# TIME_ZONE = 'UTC'
+#
+# USE_I18N = True
+#
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
 
-MEDIA_URL = 'media/'
+
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AVATAR_DOWNLOAD_PATH = 'avatars/'
 DEFAULT_AVATAR_PATH = 'avatars/default.jpg'
+
+STATICFILES_DIRS = [
+    BASE_DIR.parent / "diploma-frontend" / "frontend" / "static",
+]
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+APPEND_SLASH=False
+import logging
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
+# logger.info("STATICFILES_DIRS: %s", STATICFILES_DIRS)
+# logger.info("STATIC_ROOT: %s", STATIC_ROOT)

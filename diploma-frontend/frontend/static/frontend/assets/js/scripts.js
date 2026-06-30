@@ -211,10 +211,10 @@ var form = function(){
                 });
             });
             $select.wrap('<div class="form-selectWrap"></div>');
-            $('[data-mask]').each(function(){
-                var $this = $(this);
-                $this.mask($this.data('mask'), {placeholder:'x'});
-            });
+            // $('[data-mask]').each(function(){
+            //     var $this = $(this);
+            //     $this.mask($this.data('mask'), {placeholder:'x'});
+            // });
         }
     };
 };

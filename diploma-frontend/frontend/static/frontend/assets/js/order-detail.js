@@ -2,7 +2,7 @@ var mix = {
 	methods: {
 		getOrder(orderId) {
 			if(typeof orderId !== 'number') return
-			this.getData(`/api/order/${orderId}`)
+			this.getData(`/api/orders/${orderId}/`)
 				.then(data => {
 					this.orderId = data.id
 					this.createdAt = data.createdAt
@@ -23,23 +23,55 @@ var mix = {
 				})
 		},
 		confirmOrder() {
-			if (this.orderId !== null) {
-				this.postData(`/api/order/${this.orderId}`, { ...this })
-					.then(({ data: { orderId } }) => {
-						alert('Заказ подтвержден')
-						location.replace(`/payment/${orderId}/`)
-					})
-					.catch(() => {
-						console.warn('Ошибка при подтверждения заказа')
-					})
-			}
-		},
+            // 1. Проверяем, что корзина вообще есть и у неё есть ID
+            if (!this.basket || !this.basket.id) {
+                alert('Корзина пуста или не инициализирована');
+                return;
+            }
+
+            // 2. Обязательные поля
+            if (!this.fullName || !this.phone) {
+                alert('Заполните имя и телефон');
+                return;
+            }
+
+            const payload = {
+                fullName: this.fullName,
+                phone: this.phone,
+                email: this.email || '',
+
+                // Адрес и доставка — как есть
+                city: this.city,
+                address: this.address,
+                deliveryType: this.deliveryType,
+                paymentType: this.paymentType,
+                basketId: this.basket.id
+            };
+
+            this.postData('/api/orders/', payload)
+                .then(({ data }) => {
+                    const orderId = data.orderId || data.id;
+                    if (!orderId) {
+                        console.error('Сервер не вернул ID заказа', data);
+                        alert('Заказ создан, но не получен ID. Проверьте консоль.');
+                        return;
+                    }
+
+                    console.log('✅ Заказ создан, переход на оплату:', orderId);
+                    location.replace(`/payment/${orderId}/`);
+                })
+                .catch(err => {
+                    console.error('❌ Ошибка оформления заказа', err);
+                    alert('Не удалось оформить заказ. Проверьте консоль (F12 → Network).');
+                });
+        },
+
 		auth() {
 			const username = document.querySelector('#username').value
 			const password = document.querySelector('#password').value
-			this.postData('/api/sign-in', JSON.stringify({ username, password }))
+			this.postData('/api/sign-in/', JSON.stringify({ username, password }))
 				.then(({ data, status }) => {
-					location.assign(`/orders/${this.orderId}`)
+					location.assign(`/orders/${this.orderId}/`)
 				})
 				.catch(() => {
 					alert('Ошибка авторизации')
@@ -47,27 +79,32 @@ var mix = {
 		}
 	},
 	mounted() {
-		if(location.pathname.startsWith('/orders/')) {
-			const orderId = location.pathname.replace('/orders/', '').replace('/', '')
-			this.orderId = orderId.length ? Number(orderId) : null
-			this.getOrder(this.orderId);
-		}
-	},
-	data() {
+		const path = location.pathname;
+        const match = path.match(/\/(\d+)\/?$/);
+        if (match) {
+            this.orderId = Number(match[1]);
+            this.getOrder(this.orderId);
+        }
+    },
+    data() {
 		return {
 			orderId: null,
-			createdAt: null,
-			fullName: null,
-			phone: null,
-			email: null,
-			deliveryType: null,
-			city: null,
-			address: null,
-			paymentType: null,
-			status: null,
-			totalCost: null,
+			createdAt: '',
+			fullName: '',
+			phone: '',
+			email: '',
+			deliveryType: 'ordinary',
+			city: '',
+			address: '',
+			paymentType: 'online',
+			status: '',
+			totalCost: 0,
 			products: [],
 			paymentError: null,
-		}
+			basket: {
+				id: null,
+				basket_items: []
+			}
+		};
 	},
-}
+};

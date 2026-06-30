@@ -121,12 +121,24 @@
                 <div class="Comments">
                   <div v-for="review in product.reviews" class="Comment">
                     <div class="Comment-column Comment-column_pict">
-                      <div class="Comment-avatar"></div>
+                        <div class="Comment-avatar">
+                            <img
+                                    v-if="review.author_avatar"
+                                    :src="review.author_avatar"
+                                    class="user-avatar"
+                                    alt="Avatar"
+                                    width="80"
+                            />
+                            <div v-else class="user-avatar-letter">
+                                {{ review.author_name }}
+                            </div>
+                            <span class="author-name">{{ review.author_name }}</span>
+                        </div>
                     </div>
                     <div class="Comment-column">
                       <header class="Comment-header">
                         <div>
-                          <strong class="Comment-title">Автор: ${ review.author }$</strong>
+                          <strong class="Comment-title">Автор: ${ review.author_name }$</strong>
                           <span class="Comment-date">Дата : ${ review.date }$</span><br>
                           <span class="Comment-date">Оценка: ${ review.rate }$</span><br>
                         </div>
@@ -145,9 +157,9 @@
                     </div>
                     <div class="form-group">
                       <div class="row">
-                        <div class="row-block">
-                          <input class="form-input" id="name" name="name" type="text" placeholder="Name" v-model="review.author"/>
-                        </div>
+{#                        <div class="row-block">#}
+{#                          <input class="form-input" id="name" name="name" type="text" placeholder="Name" v-model="review.author"/>#}
+{#                        </div>#}
                         <div class="row-block">
                           <input class="form-input" id="email" name="email" type="text" placeholder="Email" v-model="review.email"/>
                         </div>

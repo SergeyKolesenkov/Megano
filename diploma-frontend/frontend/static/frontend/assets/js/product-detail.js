@@ -14,27 +14,26 @@ var mix = {
             const productId = location.pathname.startsWith('/product/')
             ? Number(location.pathname.replace('/product/', '').replace('/', ''))
             : null
-            this.getData(`/api/product/${productId}`).then(data => {
-                this.product = {
-                    ...this.product,
-                    ...data
+            if (productId === null) return;
+            this.getData(`/api/product/${productId}/`).then(data => {
+                this.product = data
+                if(data.images.length && data.images.length) {
+                    this.activePhoto = 0;
                 }
-                if(data.images.length)
-                    this.activePhoto = 0
             }).catch(() => {
                 this.product = {}
                 console.warn('Ошибка при получении товара')
             })
         },
         submitReview () {
-            this.postData(`/api/product/${this.product.id}/reviews`, {
-                author: this.review.author,
+            this.postData(`/api/product/${this.product.id}/reviews/`, {
                 email: this.review.email,
                 text: this.review.text,
                 rate: this.review.rate
             }).then(({data}) => {
-                this.product.reviews = data
+                // this.product.reviews = data
                 alert('Отзыв опубликован')
+                this.getProduct();
                 this.review.author = ''
                 this.review.email = ''
                 this.review.text = ''

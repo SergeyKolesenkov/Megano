@@ -194,7 +194,7 @@
                       </div>
                     </div>
                     <div class="Cart-block Cart-block_row">
-                      <div class="Cart-block Cart-block_amount">${ product.count }$ шт.
+                      <div class="Cart-block Cart-block_amount">${ product.stock }$ шт.
                       </div>
                     </div>
                     </div>
@@ -204,7 +204,7 @@
                   <div class="Cart-total">
                     <div class="Cart-block Cart-block_total">
                       <strong class="Cart-title">Итого:</strong>
-                      <span class="Cart-price">${ products.reduce((acc, el) => {return acc += (el.price * el.count)}, 0) }$$</span>
+                      <span class="Cart-price">${ totalCost || 0 }$$</span>
                     </div>
                     <div class="Cart-block">
                       <button class="btn btn_primary btn_lg" type="submit">Оплатить</button>
@@ -237,8 +237,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block mixins %}
-<script src="{% static 'frontend/assets/js/order-detail.js' %}"></script>
 {% endblock %}

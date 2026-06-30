@@ -20,19 +20,32 @@
     <div class="Section">
       <div class="wrap">
         <form class="form Cart" @submit.prevent="submitBasket">
+
           {% csrf_token %}
+
           <!-- Данные по товару в корзине -->
-          <div v-for="product in Object.values(basket)" class="Cart-product">
+            <div v-if="basket && basket.basket_items && basket.basket_items.length > 0">
+                <div
+                        v-for="item in basket.basket_items"
+                        :key="item.product.id"
+                        class="Cart-product"
+                        >
             <div class="Cart-block Cart-block_row">
-              <div class="Cart-block Cart-block_pict"><a class="Cart-pict" :href="`/product/${product.id}/`">
-                <img class="Cart-img" :src="product.images[0].src" :alt="product.images[0].alt"/></a>
+              <div class="Cart-block Cart-block_pict">
+                  <a class="Cart-pict" :href="'/product/' + item.product.id + '/'">
+                        <img
+                            class="Cart-img"
+                            :src="item.product && item.product.images && item.product.images.length > 0 ? item.product.images[0].src : '/static/no-image.png'"
+                            :alt="item.product.title"
+                        />
+                    </a>
               </div>
               <div class="Cart-block Cart-block_info">
-                <a class="Cart-title" :href="`/product/${product.id}/`">${ product.title }$</a>
+                <a class="Cart-title" :href="`/product/${item.product.id}/`">${ item.product.title }$</a>
 <!--                <div class="Cart-desc">${ product.shortDescription }$</div>-->
               </div>
               <div class="Cart-block Cart-block_price">
-                <div class="Cart-price">${ product.price }$$
+                <div class="Cart-price">${ item.product.price }$$
                 </div>
               </div>
             </div>
@@ -41,16 +54,16 @@
               <div class="Cart-block Cart-block_amount">
                 <div class="Cart-amount">
                   <div class="Amount">
-                    <button class="Amount-remove" type="button" @click="removeFromBasket(product.id, 1)">
+                    <button class="Amount-remove" type="button" @click="changeItemCount(item, -1)">
                     </button>
-                    <input class="Amount-input form-input" name="amount" type="text" :value="product.count"/>
-                    <button class="Amount-add" type="button" @click="addToBasket(product)">
+                    <input class="Amount-input form-input" name="amount" type="text" :value="item.count"/>
+                    <button class="Amount-add" type="button" @click="changeItemCount(item, 1)">
                     </button>
                   </div>
                 </div>
               </div>
               <div class="Cart-block Cart-block_delete">
-                <div class="Cart-delete" @click="removeFromBasket(product.id, product.count)">
+                <div class="Cart-delete" @click="removeFromBasket(item.id)">
                   <img src="/static/frontend/assets/img/icons/card/delete.svg"
                        alt="delete.svg"/>
                 </div>
@@ -62,7 +75,7 @@
           <div class="Cart-total">
             <div class="Cart-block Cart-block_total">
               <strong class="Cart-title">Итого:</strong>
-              <span class="Cart-price">${ basketCount.price }$$</span>
+              <span class="Cart-price">${ basket.basketCount.price }$$</span>
             </div>
             <div class="Cart-block" v-if="basketCount.count">
               <button type="submit" class="btn btn_success btn_lg" >Оформить заказ</button>
@@ -72,8 +85,9 @@
       </div>
     </div>
   </div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'frontend/assets/js/cart.js' %}"></script>
 {% endblock %}
 
-{% block mixins %}
-<script src="{% static 'frontend/assets/js/cart.js' %}"></script>
-{% endblock %}
