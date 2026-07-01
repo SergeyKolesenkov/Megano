@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. База данных (Изолирована от внешнего мира)
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    # Порты удалены. Django общается с db напрямую внутри сети Docker по порту 5432
+    restart: always
+
+  # 2. Контейнер Django приложения
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      # Удалено монтирование кода ./backend:/app для стабильности в production
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  # 3. Веб-сервер Nginx (Принимает внешний трафик)
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # :ro - только для чтения
+      - static_volume:/app/staticfiles:ro
+      - media_volume:/app/media:ro
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

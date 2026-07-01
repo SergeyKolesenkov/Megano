@@ -1,0 +1,40 @@
+
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Базы данных и статика
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+/media/
+
+# Виртуальные окружения Python
+.venv/
+venv/
+env/
+ENV/
+scripts/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Настройки моей IDE (PyCharm / VSCode / Ноутбук)
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Служебные файлы сборки Python
+*.egg-info/
+.eggs/
+build/
+dist/
